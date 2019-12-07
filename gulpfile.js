@@ -3,8 +3,10 @@ var gulp = require('gulp'),
     notify = require('gulp-notify'),
     sass = require('gulp-sass'),
     autoprefixer = require('gulp-autoprefixer'),
-    browserSync = require('browser-sync');
-
+    browserSync = require('browser-sync'),
+    rename = require('gulp-rename'),
+    cssnano = require ('gulp-cssnano');
+    
 var plumberErrorHandler = {
    errorHandler: notify.onError({
       title: 'Gulp',
@@ -16,15 +18,19 @@ gulp.task('sass', function() {
    gulp.src('./sass/*.scss')
       .pipe(plumber(plumberErrorHandler))
       .pipe(sass())
+      .pipe(cssnano())
+      .pipe(rename({ extname: '.min.css'}))
       .pipe(autoprefixer({
          browsers: ['last 2 versions']
       }))
       .pipe(gulp.dest('./build/css'))
-});
+   });
 
 gulp.task('scripts', function(){
-    gulp.src('./js/*.js')
+    gulp.src('./js/**/*.js')
       .pipe(gulp.dest('./build/js'))
+      .pipe(rename({ extname: '.min.js'}))
+      
 });
 
 gulp.task('browser-sync', function() {
@@ -39,7 +45,7 @@ gulp.task('browser-sync', function() {
 
 gulp.task('watch', function() {
    gulp.watch('sass/*.scss', gulp.series('sass'));
-   gulp.watch('js/*.js', gulp.series('scripts'));
+   gulp.watch('js/**/*.js', gulp.series('scripts'));
 });
 
 gulp.task('default', gulp.parallel('watch', 'browser-sync'));
