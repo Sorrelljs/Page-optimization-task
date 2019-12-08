@@ -20,9 +20,7 @@ gulp.task('sass', function() {
       .pipe(sass())
       .pipe(cssnano())
       .pipe(rename({ extname: '.min.css'}))
-      .pipe(autoprefixer({
-         browsers: ['last 2 versions']
-      }))
+      .pipe(autoprefixer())
       .pipe(gulp.dest('./build/css'))
    });
 
